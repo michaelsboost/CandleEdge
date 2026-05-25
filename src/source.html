@@ -1,0 +1,187 @@
+<!--
+  CandleEdge - Market Structure & Pattern Probability Scanner
+  MIT Licensed Open Source
+  
+  Overview:
+  A client-side market structure scanner that imports or fetches candle data,
+  detects candlestick and chart patterns, draws detected structures on an interactive chart,
+  and computes historical probabilities from the loaded dataset.
+  
+  The statistics are descriptive only - they show how similar patterns behaved in the past
+  within the same dataset. This is not predictive, nor financial advice.
+  
+  Key features:
+  - CSV import with flexible date/OHLCV column mapping
+  - Live crypto data via Coinbase exchange WebSocket/REST
+  - Candlestick pattern detection (Doji, Engulfing, Hammer, etc.)
+  - Chart pattern detection (Triangles, Wedges, Pennants)
+  - Interactive chart drawing with trendlines
+  - Historical probability engine (bullish/bearish %, avg/median move, confidence scoring)
+  - Zero external API dependencies for statistics - all calculations local to the loaded data
+
+  * Main Alpine component container - manages all app state and UI interactions 
+-->
+<div x-data="tradingDashboard()" x-init="initApp()" class="max-w-[1600px] mx-auto text-slate-200 antialiased p-4 md:p-6">
+    
+    <!-- Header Section: App branding, donate button, share, and GitHub links -->
+    <div class="flex flex-wrap justify-between items-center mb-6 gap-3 glass-card px-6 py-4">
+        <div>
+            <div class="flex gap-3 mb-3">
+                <a href="https://github.com/michaelsboost/CandleEdge" target="_blank">
+                    <svg class="w-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 232.35615 255.99998">
+                      <defs id="defs1"><linearGradient id="linearGradient14-1"><stop style="stop-color:#39dcc6;stop-opacity:1;" offset="0" id="stop29"/><stop style="stop-color:#189498;stop-opacity:1;" offset="1" id="stop30"/></linearGradient><linearGradient id="linearGradient14"><stop style="stop-color:#e5e8eb;stop-opacity:1;" offset="0" id="stop25"/><stop style="stop-color:#b7bcc4;stop-opacity:1;" offset="1" id="stop26"/></linearGradient><linearGradient id="linearGradient2"><stop style="stop-color:#69e6d7;stop-opacity:1;" offset="0" id="stop8"/><stop style="stop-color:#2f59a6;stop-opacity:1;" offset="1" id="stop9"/></linearGradient><linearGradient xlink:href="#linearGradient2" id="linearGradient8" x1="863.70178" y1="325.27271" x2="863.70178" y2="1358.3763" gradientUnits="userSpaceOnUse"/><linearGradient xlink:href="#linearGradient14" id="linearGradient16" x1="1007.835" y1="729.72961" x2="1024.4738" y2="729.72961" gradientUnits="userSpaceOnUse"/><linearGradient xlink:href="#linearGradient14" id="linearGradient20" gradientUnits="userSpaceOnUse" x1="1015.5768" y1="623.75201" x2="1015.5768" y2="858.08203"/><linearGradient xlink:href="#linearGradient14-1" id="linearGradient24" gradientUnits="userSpaceOnUse" x1="1018.3813" y1="623.51166" x2="1018.3813" y2="863.15491"/><linearGradient xlink:href="#linearGradient14-1" id="linearGradient25" gradientUnits="userSpaceOnUse" x1="1015.5768" y1="623.75201" x2="1015.5768" y2="858.08203" gradientTransform="matrix(1,0,0,1.0196821,0,-11.806876)"/><linearGradient xlink:href="#linearGradient14-1" id="linearGradient32" gradientUnits="userSpaceOnUse" x1="1018.3813" y1="623.51166" x2="1018.3813" y2="863.15491"/><linearGradient xlink:href="#linearGradient14-1" id="linearGradient33" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1,0,0,1.0196821,0,-11.806876)" x1="1015.5768" y1="623.75201" x2="1015.5768" y2="858.08203"/><linearGradient xlink:href="#linearGradient14-1" id="linearGradient38" gradientUnits="userSpaceOnUse" x1="1018.3813" y1="623.51166" x2="1018.3813" y2="863.15491"/><linearGradient xlink:href="#linearGradient14-1" id="linearGradient39" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1,0,0,0.60143648,0,348.07796)" x1="1015.5768" y1="623.75201" x2="1015.5768" y2="858.08203"/><linearGradient xlink:href="#linearGradient14" id="linearGradient41" gradientUnits="userSpaceOnUse" x1="1007.835" y1="729.72961" x2="1024.4738" y2="729.72961"/><linearGradient xlink:href="#linearGradient14" id="linearGradient42" gradientUnits="userSpaceOnUse" x1="1015.5768" y1="623.75201" x2="1015.5768" y2="858.08203"/><linearGradient xlink:href="#linearGradient2" id="linearGradient46" x1="880.41382" y1="324.78604" x2="880.41382" y2="1339.4088" gradientUnits="userSpaceOnUse"/></defs><g id="g54" transform="matrix(0.24329948,0,0,0.24329948,-85.55113,-75.754999)"><path id="path43" style="display:inline;fill:url(#linearGradient46);stroke:none;stroke-width:2;stroke-linecap:square" d="M 877.72852,311.36523 A 526.10071,526.10071 0 0 0 351.62891,837.4668 526.10071,526.10071 0 0 0 877.72852,1363.5664 526.10071,526.10071 0 0 0 1242.1074,1216.9531 L 1134.3164,1108.332 A 373.10205,373.10205 0 0 1 877.72852,1210.5684 373.10205,373.10205 0 0 1 504.62695,837.4668 373.10205,373.10205 0 0 1 877.72852,464.36523 373.10205,373.10205 0 0 1 1098.9688,537.03711 L 1212.6855,431.77344 A 526.10071,526.10071 0 0 0 877.72852,311.36523 Z"/><path id="path46" fill="none" stroke="#000000" stroke-width="1" d="m 657.31019,1133.554 c 32.0893,-2.5597 64.8718,-37.8486 90.6553,-56.3263 20.2108,-14.4915 46.7008,-27.1166 71.991,-27.2366 h 21.3306 l 13.3317,1.2132 c 7.2524,0.4933 20.7707,-0.7466 27.9965,-2.0264 34.809,-6.1726 68.1915,-24.6369 97.3212,-44.0745 57.00621,-38.0086 113.18581,-94.1882 156.54041,-147.0883 L 1186.204,792.69 c 2.9996,-4.2928 16.4913,-22.8772 17.1712,-26.5967 0.9732,-5.2793 -6.3459,-7.1191 -10.1321,-8.4789 l -29.1563,-10.9587 c -4.4261,-2.6663 -6.4259,-7.719 -3.9195,-12.4917 34.3848,-24.86121 133.2508,-74.79584 138.3693,-74.3507 9.3189,0.7999 8.0923,11.5185 8.0257,18.2244 -4.4596,42.65667 -8.9707,85.3077 -13.2384,127.984 -0.3599,3.9461 -0.7332,10.8653 -2.9729,14.2248 -3.7062,5.3327 -9.8255,3.8929 -14.0649,0 l -16.9446,-19.5308 c -3.3196,-3.6529 -6.3059,-7.1725 -11.2119,-3.5329 l -20.0508,26.17 -43.1946,54.6598 c -55.913,66.1118 -126.5175,138.596 -202.28141,181.684 -33.6891,19.1576 -69.8313,36.5154 -109.3197,37.2353 h -11.9985 c -20.944,-0.5066 -39.2617,-3.3995 -59.9925,2.2797 -27.1699,7.4391 -51.9535,28.7831 -73.3241,46.4342 l -35.9955,29.663 c -124.56571,64.0847 -153.88463,-51.8885 -34.6623,-41.7548 z M 1294.5638,656.707 h 1.3332 l -1.3332,1.3332 z" style="display:inline;fill:url(#linearGradient8);stroke:none"><title id="title46">Selection</title></path><g id="g42" style="display:inline" transform="matrix(0.9141993,0,0,0.9141993,92.31161,46.703552)"><g id="g14" style="display:inline"><rect style="opacity:1;fill:url(#linearGradient16);stroke:none;stroke-width:2;stroke-linecap:square" id="rect13" width="16.638784" height="370.80722" x="1007.835" y="544.32599" ry="8.3193922"/><rect style="opacity:1;fill:url(#linearGradient20);fill-opacity:1;stroke:none;stroke-width:3.36977;stroke-linecap:square" id="rect21" width="73.68605" height="237.69695" x="979.3114" y="622.76599" ry="16.737856"/></g><g id="g24" transform="translate(-100.42713,72.530707)" style="display:inline"><rect style="opacity:1;fill:url(#linearGradient24);stroke:none;stroke-width:2;stroke-linecap:square" id="rect22" width="16.638784" height="370.80722" x="1007.835" y="544.32599" ry="8.3193922"/><rect style="opacity:1;fill:url(#linearGradient25);fill-opacity:1;stroke:none;stroke-width:3.40277;stroke-linecap:square" id="rect24" width="73.68605" height="242.37532" x="979.3114" y="623.21643" ry="17.067291"/></g><g id="g32" transform="translate(-204.80899,178.40374)" style="display:inline"><rect style="opacity:1;fill:url(#linearGradient32);stroke:none;stroke-width:2;stroke-linecap:square" id="rect30" width="16.638733" height="290.80719" x="1007.835" y="544.32599" ry="8.3193922"/><rect style="opacity:1;fill:url(#linearGradient33);fill-opacity:1;stroke:none;stroke-width:3.40277;stroke-linecap:square" id="rect32" width="73.686035" height="162.37531" x="979.3114" y="623.21643" ry="17.067291"/></g><g id="g32-9" transform="matrix(1.0078604,0,0,1.0078604,-419.88615,170.67979)" style="display:inline"><rect style="opacity:1;fill:url(#linearGradient38);stroke:none;stroke-width:2;stroke-linecap:square" id="rect30-4" width="16.638733" height="250.80719" x="1007.835" y="664.32599" ry="8.3193922" rx="0"/><rect style="opacity:1;fill:url(#linearGradient39);fill-opacity:1;stroke:none;stroke-width:2.61334;stroke-linecap:square" id="rect32-9" width="73.68605" height="142.95961" x="979.3114" y="722.63214" ry="10.066757"/></g><g id="g41" transform="translate(-309.00496,143.02952)"><rect style="display:inline;opacity:1;fill:url(#linearGradient41);stroke:none;stroke-width:2;stroke-linecap:square" id="rect39" width="16.638733" height="310.80719" x="1007.835" y="604.32599" ry="8.3193922"/><rect style="display:inline;opacity:1;fill:url(#linearGradient42);fill-opacity:1;stroke:none;stroke-width:3.36977;stroke-linecap:square" id="rect41" width="73.686035" height="177.69696" x="979.3114" y="682.76599" ry="16.737856"/></g></g></g>
+                    </svg>
+                </a>
+                <h1 class="text-3xl md:text-4xl tracking-tight bg-gradient-to-r from-cyan-300 to-emerald-300 bg-clip-text text-transparent">CandleEdge</h1>
+            </div>
+            <p class="text-sm text-cyan-300/80 tracking-wide mt-1">Statistical Edge Engine · Real Historical Validation</p>
+        </div>
+        <div class="flex gap-2">
+            <a href="https://michaelsboost.com/donate" target="_blank" class="donate-btn px-4 py-2 rounded-xl text-sm font-semibold transition flex items-center gap-1 text-white shadow-lg">❤️ Donate</a>
+            <button @click="shareApp()" class="bg-slate-800/70 hover:bg-slate-700 px-3 py-2 rounded-xl text-sm font-semibold transition">📤 Share</button>
+            <button @click="window.open('https://github.com/michaelsboost/CandleEdge', '_blank')" class="bg-slate-800/70 hover:bg-slate-700 px-3 py-2 rounded-xl text-sm font-semibold transition">🐙 GitHub</button>
+        </div>
+    </div>
+
+    <!-- Data Source Selection: Demo data, CSV import, or live crypto feed -->
+    <div class="glass-card p-4 mb-6">
+        <div class="flex flex-wrap gap-3 items-center justify-between">
+            <div class="flex gap-2 flex-wrap">
+                <button @click="setMode('demo')" :class="{'bg-cyan-600 shadow-lg': activeMode === 'demo', 'bg-slate-700/70': activeMode !== 'demo'}" class="px-5 py-2 rounded-xl text-sm font-bold transition">📊 Demo Mode</button>
+                <button @click="setMode('csv')" :class="{'bg-cyan-600 shadow-lg': activeMode === 'csv', 'bg-slate-700/70': activeMode !== 'csv'}" class="px-5 py-2 rounded-xl text-sm font-bold transition">📁 CSV Import</button>
+                <button @click="setMode('crypto')" :class="{'bg-cyan-600 shadow-lg': activeMode === 'crypto', 'bg-slate-700/70': activeMode !== 'crypto'}" class="px-5 py-2 rounded-xl text-sm font-bold transition">🪙 Crypto Live</button>
+            </div>
+            
+            <!-- Crypto mode UI: symbol selector, timeframe, connection status, live price, and auto-scanner -->
+            <div x-show="activeMode === 'crypto'" class="flex flex-wrap gap-3 items-center">
+                <select x-model="cryptoSymbol" @change="onSymbolChange()" class="bg-slate-800 border border-cyan-500/50 rounded-lg px-3 py-1.5 text-sm font-mono">
+                    <option value="BTC-USD">BTC-USD</option><option value="ETH-USD">ETH-USD</option><option value="SOL-USD">SOL-USD</option><option value="XRP-USD">XRP-USD</option>
+                </select>
+                <select x-model="cryptoTimeframe" @change="onTimeframeChange()" class="bg-slate-800 border border-cyan-500/50 rounded-lg px-3 py-1.5 text-sm">
+                    <option value="1m">1m</option><option value="5m">5m</option><option value="15m">15m</option><option value="1h">1h</option>
+                </select>
+                <div class="flex items-center gap-1 text-sm bg-black/40 px-3 py-1.5 rounded-full">
+                    <span class="status-led" :class="{'green': wsStatus === 'live', 'red': wsStatus === 'disconnected', 'yellow': wsStatus === 'connecting'}"></span>
+                    <span x-text="wsStatus === 'live' ? 'LIVE' : (wsStatus === 'connecting' ? 'CONNECTING' : 'DISCONNECTED')" class="font-mono text-xs"></span>
+                </div>
+                <span class="text-xs font-mono text-emerald-300" x-text="livePrice ? `$${livePrice.toFixed(2)}` : '—'"></span>
+                <button @click="toggleScannerMode()" :class="{'bg-emerald-700': scannerActive, 'bg-slate-700': !scannerActive}" class="text-xs px-3 py-1.5 rounded-full font-bold">🤖 Scanner: <span x-text="scannerActive ? 'ON' : 'OFF'"></span></button>
+            </div>
+            
+            <!-- CSV mode UI: file import button and reset to demo -->
+            <div x-show="activeMode === 'csv'" class="flex gap-2">
+                <label class="bg-cyan-700/60 hover:bg-cyan-600 px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer">📂 Import CSV<input type="file" accept=".csv" @change="loadCSVFile($event)" class="hidden"></label>
+                <button @click="resetToSampleData()" class="bg-slate-700/60 hover:bg-slate-600 px-4 py-2 rounded-lg text-xs">🔄 Reset to Demo</button>
+            </div>
+        </div>
+        <!-- Display connection errors if any occur during crypto feed -->
+        <div x-show="connectionError" class="mt-3 text-xs bg-cyan-900/40 border border-cyan-500/50 rounded-lg p-2 text-cyan-200" x-text="connectionError"></div>
+    </div>
+
+    <!-- Edge Status Card: Shows the best statistically-validated pattern and its metrics -->
+    <div class="glass-card p-5 mb-6" :class="qualifiedBestEdge ? (qualifiedBestEdge.confidence === 'High' ? 'border-l-8 border-l-emerald-400' : 'border-l-8 border-l-amber-500') : 'border-l-8 border-l-slate-600'">
+        <div class="flex flex-wrap justify-between items-start gap-3">
+            <div class="flex-1">
+                <h2 class="text-xl font-black" x-text="qualifiedBestEdge ? (qualifiedBestEdge.bias === 'bullish' ? '📈 BULLISH EDGE VALIDATED' : '📉 BEARISH EDGE VALIDATED') : '⏳ NO STATISTICAL EDGE'"></h2>
+                <template x-if="qualifiedBestEdge">
+                    <div class="mt-2 space-y-2">
+                        <div class="flex flex-wrap gap-3 items-center">
+                            <span class="text-2xl" x-text="qualifiedBestEdge.icon"></span>
+                            <span class="font-bold text-lg" x-text="qualifiedBestEdge.name"></span>
+                            <span class="stat-chip" :class="qualifiedBestEdge.confidence === 'High' ? 'bg-emerald-900/40 text-emerald-300' : (qualifiedBestEdge.confidence === 'Moderate' ? 'bg-amber-900/40 text-amber-300' : 'bg-gray-800 text-gray-400')" x-text="qualifiedBestEdge.confidence + ' confidence'"></span>
+                        </div>
+                        <!-- Statistical metrics grid: directional probability, sample size, forward window, average move -->
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm bg-black/30 p-3 rounded-lg">
+                            <div><span class="text-slate-400">Directional Prob:</span><br><span class="font-mono text-lg" :class="qualifiedBestEdge.bias === 'bullish' ? 'text-emerald-400' : 'text-rose-400'" x-text="qualifiedBestEdge.bias === 'bullish' ? qualifiedBestEdge.bullishProb + '%' : qualifiedBestEdge.bearishProb + '%'"></span></div>
+                            <div><span class="text-slate-400">Sample Size:</span><br><span class="font-mono font-bold" x-text="qualifiedBestEdge.sampleSize"></span></div>
+                            <div><span class="text-slate-400">Forward Window:</span><br><span class="font-mono" x-text="'+' + qualifiedBestEdge.forwardBars + ' candles'"></span></div>
+                            <div><span class="text-slate-400">Avg Move (%):</span><br><span class="font-mono" :class="qualifiedBestEdge.avgMovePct > 0 ? 'text-emerald-300' : 'text-rose-300'" x-text="qualifiedBestEdge.avgMovePct.toFixed(2) + '%'"></span></div>
+                        </div>
+                        <!-- Explanation text describing how the edge was calculated -->
+                        <div class="bg-black/40 rounded-lg p-3 text-xs">
+                            <div class="text-cyan-300 font-semibold mb-1">📐 Statistical Reasoning</div>
+                            <div x-text="qualifiedBestEdge.decisionText"></div>
+                            <div class="mt-1 text-slate-400 text-[11px]">Weighted Score: <span x-text="qualifiedBestEdge.weightedScore.toFixed(2)"></span></div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <!-- Two-column layout: Chart (left) and Pattern Explorer (right) -->
+    <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Chart Area: Interactive candlestick chart with timeframe controls -->
+        <div class="glass-card col-span-2 p-4">
+            <div class="flex flex-wrap justify-between mb-3 gap-2">
+                <div class="flex gap-1 flex-wrap">
+                    <!-- Timeframe selector buttons (1m, 5m, 15m, 1h, 1d) -->
+                    <template x-for="tf in ['1m','5m','15m','1h','1d']" :key="tf">
+                        <button @click="setTimeframe(tf)" :class="{'bg-cyan-600': selectedTimeframe === tf, 'bg-slate-800/70': selectedTimeframe !== tf}" class="px-3 py-1 text-xs font-semibold rounded-lg"><span x-text="tf"></span></button>
+                    </template>
+                </div>
+                <div class="flex gap-2">
+                    <button @click="clearDrawing()" class="clear-btn bg-slate-700/60 hover:bg-red-600 px-3 py-1 rounded-lg text-xs font-semibold transition">🗑️ Clear Drawing</button>
+                </div>
+            </div>
+            <!-- Lightweight Charts container -->
+            <div id="candlestick-chart" style="width:100%; height:420px;"></div>
+            <div class="mt-2 text-center text-[10px] text-slate-500">Click any pattern below → statistical validation computed from historical occurrences within dataset</div>
+        </div>
+    
+        <!-- Pattern Explorer Panel: Lists detected patterns with tabs (Current, Recent, Historical) -->
+        <div class="glass-card p-4">
+            <div class="flex flex-wrap justify-between items-center mb-3 gap-2">
+                <div class="flex gap-4">
+                    <button @click="activeTab = 'current'" :class="{'tab-active': activeTab === 'current'}" class="tab-btn text-sm font-semibold pb-1 px-1">🔴 Current</button>
+                    <button @click="activeTab = 'recent'" :class="{'tab-active': activeTab === 'recent'}" class="tab-btn text-sm font-semibold pb-1 px-1">🕐 Recent</button>
+                    <button @click="activeTab = 'historical'" :class="{'tab-active': activeTab === 'historical'}" class="tab-btn text-sm font-semibold pb-1 px-1">📚 Historical</button>
+                </div>
+                <div class="text-xs text-slate-400"><span x-text="activeTab === 'current' ? currentPatterns.length : (activeTab === 'recent' ? recentPatterns.length : historicalPatterns.length)"></span> patterns</div>
+            </div>
+            <div class="pattern-detail">
+                <!-- Current patterns (within last 20 candles) -->
+                <div x-show="activeTab === 'current'">
+                    <div x-show="currentPatterns.length === 0" class="text-center text-slate-500 py-6 text-sm">No active patterns detected</div>
+                    <template x-for="pattern in currentPatterns" :key="pattern.id">
+                        <div class="pattern-card p-3 mb-2 rounded-lg" :class="{'pattern-card-active': selectedPattern && selectedPattern.id === pattern.id}" @click="selectAndDrawPattern(pattern)">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xl" x-text="pattern.icon"></span>
+                                    <div>
+                                        <div class="font-medium text-sm" x-text="pattern.name"></div>
+                                        <div class="flex gap-1 mt-0.5"><span :class="pattern.type === 'candle' ? 'badge-candle' : 'badge-chart'" x-text="pattern.type === 'candle' ? 'Candlestick' : 'Chart Pattern'"></span><span class="text-[10px] text-slate-500" x-text="pattern.status || pattern.bias"></span></div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-xs font-mono" x-show="pattern.stats" :class="pattern.stats.bias === 'bullish' ? 'text-emerald-400' : (pattern.stats.bias === 'bearish' ? 'text-rose-400' : 'text-slate-400')" x-text="pattern.stats ? `${pattern.stats.bias === 'bullish' ? '↑' : '↓'} ${pattern.stats.bias === 'bullish' ? pattern.stats.bullishProb : pattern.stats.bearishProb}%` : ''"></div>
+                                    <div class="text-[10px] text-slate-500" x-text="pattern.stats ? `n=${pattern.stats.sampleSize}` : ''"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <!-- Recent patterns (within last 100 candles, excluding current) -->
+                <div x-show="activeTab === 'recent'">
+                    <div x-show="recentPatterns.length === 0" class="text-center text-slate-500 py-6 text-sm">No recent patterns</div>
+                    <template x-for="pattern in recentPatterns" :key="pattern.id">
+                        <div class="pattern-card p-3 mb-2 rounded-lg" :class="{'pattern-card-active': selectedPattern && selectedPattern.id === pattern.id}" @click="selectAndDrawPattern(pattern)">
+                            <div class="flex items-center justify-between"><div class="flex items-center gap-2"><span class="text-xl" x-text="pattern.icon"></span><div><div class="font-medium text-sm" x-text="pattern.name"></div><div class="text-[10px] text-slate-400">at candle <span x-text="pattern.candleIndex"></span></div></div></div><span :class="pattern.bias === 'bullish' ? 'text-emerald-400' : (pattern.bias === 'bearish' ? 'text-rose-400' : 'text-slate-400')" class="text-xs" x-text="pattern.bias"></span></div>
+                        </div>
+                    </template>
+                </div>
+                <!-- Historical patterns (older than 100 candles) -->
+                <div x-show="activeTab === 'historical'">
+                    <div x-show="historicalPatterns.length === 0" class="text-center text-slate-500 py-6 text-sm">No historical patterns</div>
+                    <template x-for="pattern in historicalPatterns.slice(0, historicalLimit)" :key="pattern.id">
+                        <div class="pattern-card p-2 mb-1 rounded-lg" :class="{'pattern-card-active': selectedPattern && selectedPattern.id === pattern.id}" @click="selectAndDrawPattern(pattern)">
+                            <div class="flex items-center justify-between"><div class="flex items-center gap-2"><span class="text-lg" x-text="pattern.icon"></span><div><div class="font-medium text-xs" x-text="pattern.name"></div><div class="text-[9px] text-slate-500">Candle <span x-text="pattern.candleIndex"></span></div></div></div><span :class="pattern.bias === 'bullish' ? 'text-emerald-400' : (pattern.bias === 'bearish' ? 'text-rose-400' : 'text-slate-400')" class="text-[10px]" x-text="pattern.bias"></span></div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer / Disclaimer -->
+    <div class="mt-4 text-center text-[10px] text-slate-500 border-t border-white/5 pt-4">CandleEdge: Real historical probabilities from loaded dataset. No AI hallucinations. For educational analysis only. Not financial advice.</div>
+</div>

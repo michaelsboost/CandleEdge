@@ -1,0 +1,134 @@
+/* Core styling - glass morphism design system with dark theme */
+* {
+  color: #e2e8f0;
+}
+
+body {
+  background: #0A0F1A;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.glass-card {
+  background: rgba(12, 20, 30, 0.65);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.5);
+}
+
+.glass-panel {
+  background: rgba(5, 12, 20, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+button:active {
+  transform: scale(0.97);
+  transition: all 0.1s ease;
+}
+
+.status-led {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.status-led.green {
+  background-color: #10B981;
+  box-shadow: 0 0 5px #10B981;
+}
+
+.status-led.red {
+  background-color: #EF4444;
+  box-shadow: 0 0 5px #EF4444;
+}
+
+.status-led.yellow {
+  background-color: #F59E0B;
+  box-shadow: 0 0 5px #F59E0B;
+}
+
+.signal-strong {
+  background: linear-gradient(135deg, #10B981, #059669);
+}
+
+.signal-moderate {
+  background: linear-gradient(135deg, #F59E0B, #D97706);
+}
+
+.donate-btn {
+  background: linear-gradient(135deg, #10B981, #06B6D4);
+  border: none;
+  transition: all 0.2s;
+}
+
+.donate-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
+}
+
+.pattern-card {
+  cursor: pointer;
+  transition: all 0.15s;
+  border-left: 3px solid transparent;
+}
+
+.pattern-card:hover {
+  background: rgba(14, 165, 233, 0.15);
+  transform: translateX(2px);
+}
+
+.pattern-card-active {
+  background: rgba(14, 165, 233, 0.25);
+  border-left-color: #0EA5E9;
+}
+
+.tab-btn {
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.tab-active {
+  border-bottom: 2px solid #0EA5E9;
+  color: #22D3EE;
+}
+
+.pattern-detail {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.clear-btn {
+  transition: all 0.2s;
+}
+
+.clear-btn:hover {
+  background: #DC2626;
+  transform: scale(0.98);
+}
+
+.badge-candle {
+  background: rgba(56, 189, 248, 0.2);
+  color: #22D3EE;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 12px;
+}
+
+.badge-chart {
+  background: rgba(168, 85, 247, 0.2);
+  color: #C084FC;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 12px;
+}
+
+.stat-chip {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 20px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 500;
+}
