@@ -2,7 +2,7 @@
 
 *Client-side market structure scanner that detects candlestick and chart patterns, draws detected structures on interactive charts, and computes historical probabilities from your own dataset.*
 
-![CandleEdge Screenshot](https://raw.githubusercontent.com/michaelsboost/CandleEdge/main/imgs/screenshot.png)
+![CandleEdge Screenshot](imgs/banner.png)
 
 [![MIT License](https://img.shields.io/github/license/michaelsboost/CandleEdge)](LICENSE)  [![GitHub Stars](https://img.shields.io/github/stars/michaelsboost/CandleEdge)](https://github.com/michaelsboost/CandleEdge/stargazers)  [![GitHub Issues](https://img.shields.io/github/issues/michaelsboost/CandleEdge)](https://github.com/michaelsboost/CandleEdge/issues)
 
