@@ -150,13 +150,37 @@ The purpose is to help users explore:
 | Pattern | Bias |
 |---|---|
 | Doji | Neutral |
+| Dragonfly Doji | Bullish |
+| Gravestone Doji | Bearish |
+| Long-Legged Doji | Neutral |
+| Spinning Top | Neutral |
 | Bullish Engulfing | Bullish |
 | Bearish Engulfing | Bearish |
+| Bullish Outside Bar | Bullish |
+| Bearish Outside Bar | Bearish |
 | Inside Bar | Neutral |
 | Hammer | Bullish |
+| Inverted Hammer | Bullish |
+| Hanging Man | Bearish |
 | Shooting Star | Bearish |
 | Three White Soldiers | Bullish |
 | Three Black Crows | Bearish |
+| Morning Star | Bullish |
+| Evening Star | Bearish |
+| Piercing Pattern | Bullish |
+| Dark Cloud Cover | Bearish |
+| Tweezer Top | Bearish |
+| Tweezer Bottom | Bullish |
+| Bullish Harami | Bullish |
+| Bearish Harami | Bearish |
+| Bullish Kicker | Bullish |
+| Bearish Kicker | Bearish |
+| Bullish Marubozu | Bullish |
+| Bearish Marubozu | Bearish |
+| NR4 | Neutral |
+| NR7 | Neutral |
+| Long Lower Wick Rejection | Bullish |
+| Long Upper Wick Rejection | Bearish |
 
 ---
 
@@ -171,8 +195,30 @@ The purpose is to help users explore:
 | Falling Wedge | Bullish |
 | Bullish Pennant | Bullish |
 | Bearish Pennant | Bearish |
+| Bull Flag | Bullish |
+| Bear Flag | Bearish |
+| Rising Channel | Bullish |
+| Falling Channel | Bearish |
+| Rectangle Range | Neutral |
+| Double Top | Bearish |
+| Double Bottom | Bullish |
+| Triple Top | Bearish |
+| Triple Bottom | Bullish |
+| Head and Shoulders | Bearish |
+| Inverse Head and Shoulders | Bullish |
+| Cup and Handle | Bullish |
+| Break of Structure (Bullish) | Bullish |
+| Break of Structure (Bearish) | Bearish |
+| Liquidity Sweep High | Bearish |
+| Liquidity Sweep Low | Bullish |
+| Higher High | Bullish |
+| Higher Low | Bullish |
+| Lower High | Bearish |
+| Lower Low | Bearish |
+| Support Bounce | Bullish |
+| Resistance Rejection | Bearish |
 
-Chart structures are generated using swing-high and swing-low detection logic and visualized directly on the chart with trendlines.
+Chart structures are generated using swing-high, swing-low, and local-extrema detection logic and visualized directly on the chart with trendlines and structure markers.
 
 ---
 

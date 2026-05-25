@@ -192,6 +192,46 @@ This prevents the engine from overvaluing:
 
 ---
 
+# ⚡ Pattern Cache Optimization
+
+To improve performance on large datasets, CandleEdge uses in-memory caching systems.
+
+## Occurrence Cache
+
+Pattern occurrence scans are cached using:
+
+```txt
+patternId + dataset signature
+```
+
+This prevents repeated rescanning of identical datasets.
+
+---
+
+## Statistical Cache
+
+Computed statistical summaries are cached using:
+
+```txt
+patternId + candle length + last timestamp
+```
+
+This reduces repeated probability calculations during UI interactions and timeframe changes.
+
+---
+
+## Dataset Signatures
+
+Datasets are fingerprinted using:
+
+```txt
+candle_count + first_timestamp + last_timestamp
+```
+
+This allows cache invalidation when datasets change.
+
+---
+
 # 🚫 Why CandleEdge Is Descriptive, Not Predictive
 
 The engine intentionally avoids predictive claims because:
@@ -249,14 +289,40 @@ Instead it says:
 
 ## Included Candlestick Patterns
 
-- Doji
-- Bullish Engulfing
-- Bearish Engulfing
-- Inside Bar
-- Hammer
-- Shooting Star
-- Three White Soldiers
-- Three Black Crows
+| Pattern | Bias |
+|---|---|
+| Doji | Neutral |
+| Dragonfly Doji | Bullish |
+| Gravestone Doji | Bearish |
+| Long Legged Doji | Neutral |
+| Spinning Top | Neutral |
+| Bullish Engulfing | Bullish |
+| Bearish Engulfing | Bearish |
+| Bullish Outside Bar | Bullish |
+| Bearish Outside Bar | Bearish |
+| Inside Bar | Neutral |
+| Hammer | Bullish |
+| Inverted Hammer | Bullish |
+| Hanging Man | Bearish |
+| Shooting Star | Bearish |
+| Three White Soldiers | Bullish |
+| Three Black Crows | Bearish |
+| Morning Star | Bullish |
+| Evening Star | Bearish |
+| Piercing Pattern | Bullish |
+| Dark Cloud Cover | Bearish |
+| Tweezer Top | Bearish |
+| Tweezer Bottom | Bullish |
+| Bullish Harami | Bullish |
+| Bearish Harami | Bearish |
+| Bullish Kicker | Bullish |
+| Bearish Kicker | Bearish |
+| Bullish Marubozu | Bullish |
+| Bearish Marubozu | Bearish |
+| NR4 | Neutral |
+| NR7 | Neutral |
+| Long Lower Wick Rejection | Bullish |
+| Long Upper Wick Rejection | Bearish |
 
 ---
 
@@ -289,13 +355,63 @@ Three consecutive bullish candles with progressively higher closes.
 
 ## Included Chart Structures
 
-- Ascending Triangle
-- Descending Triangle
-- Symmetrical Triangle
-- Rising Wedge
-- Falling Wedge
-- Bullish Pennant
-- Bearish Pennant
+| Pattern | Bias |
+|---|---|
+| Ascending Triangle | Bullish |
+| Descending Triangle | Bearish |
+| Symmetrical Triangle | Neutral |
+| Rising Wedge | Bearish |
+| Falling Wedge | Bullish |
+| Bullish Pennant | Bullish |
+| Bearish Pennant | Bearish |
+| Rising Channel | Bullish |
+| Falling Channel | Bearish |
+| Rectangle Range | Neutral |
+| Bull Flag | Bullish |
+| Bear Flag | Bearish |
+| Double Top | Bearish |
+| Double Bottom | Bullish |
+| Triple Top | Bearish |
+| Triple Bottom | Bullish |
+| Head and Shoulders | Bearish |
+| Inverse Head and Shoulders | Bullish |
+| Cup and Handle | Bullish |
+| Break of Structure (Bullish) | Bullish |
+| Break of Structure (Bearish) | Bearish |
+| Liquidity Sweep High | Bearish |
+| Liquidity Sweep Low | Bullish |
+| Higher High | Bullish |
+| Higher Low | Bullish |
+| Lower High | Bearish |
+| Lower Low | Bearish |
+| Support Bounce | Bullish |
+| Resistance Rejection | Bearish |
+
+Chart structures are generated using swing-high and swing-low detection logic, local extrema analysis, structural confirmation windows, and trendline projection systems visualized directly on the chart.
+
+---
+
+# 🧭 Structural Confirmation Logic
+
+Many chart structures require recent confirmation before appearing in the scanner.
+
+Examples include:
+
+- Double Tops
+- Triple Bottoms
+- Head and Shoulders
+- BOS events
+- Liquidity sweeps
+
+This prevents stale historical structures from being treated as active signals.
+
+Default confirmation windows typically range between:
+
+```txt
+15–25 candles
+```
+
+depending on structure type.
 
 ---
 

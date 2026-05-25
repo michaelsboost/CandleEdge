@@ -45,6 +45,8 @@ Calculates historical performance statistics for a specific pattern across the c
 `${patternId}_${candleCount}_${lastCandleTime}`
 ```
 
+- Uses dataset signature caching
+- Uses occurrence caching
 - Skips occurrences without enough future candles
 - Selects the strongest forward window using weighted scoring:
   - Directional strength → 50%
@@ -88,13 +90,58 @@ Identifies all candlestick and chart patterns that complete at a specific candle
 ### Important Logic
 
 - Candlestick patterns are checked first
-- Chart patterns only evaluate after 30 candles
-- Chart patterns analyze up to 100 previous candles
+- Chart patterns evaluate after 40 candles
+- Chart patterns analyze up to 200 previous candles
+- Complex patterns search multiple peak/trough combinations
+- Uses confirmation windows for recently completed structures
+- Optional debug logging can be enabled
 - Pattern detectors return `null` if criteria are not met
 
 ### Why It Exists
 
 Centralizes all pattern detection logic into one reusable function.
+
+---
+
+### `isRecentlyConfirmed(point, currentIdx, maxBarsAgo)`
+
+**Purpose:**  
+Checks whether a pattern anchor point occurred recently enough to count as confirmed.
+
+### Inputs
+
+- `point` *(object)* — Point containing `.index`
+- `currentIdx` *(integer)* — Current candle index
+- `maxBarsAgo` *(integer, optional)* — Maximum candles ago
+
+### Output
+
+```javascript
+true | false
+```
+
+### Why It Exists
+
+Allows patterns to remain visible shortly after formation instead of appearing only on one exact candle.
+
+---
+
+### `debugLog(message, data)`
+
+**Purpose:**  
+Optional debug logging helper for pattern detection analysis.
+
+### Important Logic
+
+Debugging is controlled using:
+
+```javascript
+ENABLE_DEBUG = true
+```
+
+### Why It Exists
+
+Helps troubleshoot why certain structures are or are not detected.
 
 ---
 
@@ -129,6 +176,26 @@ Provides the geometric anchor points used for chart pattern detection.
 
 ---
 
+### `findLocalExtrema(candles, lookback)`
+
+**Purpose:**  
+Finds broader local peaks and troughs used for complex structure analysis.
+
+### Important Logic
+
+Used by:
+
+- Double Tops
+- Triple Bottoms
+- Head and Shoulders
+- Cup and Handle
+
+### Why It Exists
+
+Provides cleaner extrema detection for multi-point structures.
+
+---
+
 # 📐 Chart Pattern Detectors
 
 ---
@@ -142,6 +209,28 @@ Provides the geometric anchor points used for chart pattern detection.
 - `detectFallingWedge`
 - `detectBullishPennant`
 - `detectBearishPennant`
+- `detectBullFlag`
+- `detectBearFlag`
+- `detectRectangleRange`
+- `detectRisingChannel`
+- `detectFallingChannel`
+- `detectDoubleTop`
+- `detectDoubleBottom`
+- `detectTripleTop`
+- `detectTripleBottom`
+- `detectCupAndHandle`
+- `detectHeadAndShoulders`
+- `detectInverseHeadAndShoulders`
+- `detectBOSBullish`
+- `detectBOSBearish`
+- `detectLiquiditySweepHigh`
+- `detectLiquiditySweepLow`
+- `detectHigherHigh`
+- `detectHigherLow`
+- `detectLowerHigh`
+- `detectLowerLow`
+- `detectSupportBounce`
+- `detectResistanceRejection`
 
 ### Inputs
 
@@ -175,6 +264,42 @@ if no valid structure is detected.
 ### Why They Exist
 
 Each chart structure uses different geometric conditions. Keeping detectors separate improves maintainability and extensibility.
+
+---
+
+# 🧪 Validation Helpers
+
+---
+
+### `hasValidPullbackBetweenPeaks(candles, peak1Idx, peak2Idx)`
+
+**Purpose:**  
+Validates that there is a meaningful pullback between two peaks.
+
+### Important Logic
+
+- Requires at least 1% retracement
+- Prevents false Double Top and Triple Top detections
+
+### Why It Exists
+
+Ensures patterns contain meaningful price structure instead of consecutive swing highs.
+
+---
+
+### `hasValidBounceBetweenTroughs(candles, trough1Idx, trough2Idx)`
+
+**Purpose:**  
+Validates that there is a meaningful bounce between two troughs.
+
+### Important Logic
+
+- Requires at least 1% recovery
+- Prevents false Double Bottom and Triple Bottom detections
+
+### Why It Exists
+
+Ensures patterns contain meaningful price recovery instead of consecutive swing lows.
 
 ---
 
@@ -307,7 +432,11 @@ Draws pattern geometry on the interactive chart.
 - Draws:
   - upper trendline
   - lower trendline
+  - neckline lines
   - anchor markers
+  - BOS markers
+  - liquidity sweep markers
+  - support/resistance markers
 
 ### Why It Exists
 
@@ -444,6 +573,18 @@ detectPatternsAtCandle()
 ```
 
 runs across the dataset.
+
+↓
+
+## 4b. Pattern Combination Search
+
+Complex structures such as Double Tops, Triple Bottoms, Head and Shoulders, and Cup and Handle search multiple recent peak/trough combinations and select the strongest valid match.
+
+↓
+
+## 4c. Confirmation Windows
+
+Patterns remain valid for a configurable number of candles after formation, usually 15–25 candles.
 
 ↓
 
